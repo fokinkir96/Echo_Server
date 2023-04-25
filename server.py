@@ -1,28 +1,6 @@
 import socket, os, datetime
 
-# sock = socket.socket()
-#
-# sock.bind(('localhost', 9090))
-#
-# sock.listen()
-#
-# print(sock.getsockname()[0])
-# print(sock.getsockname()[1])
-#
-# while True:
-#     conn, addr = sock.accept()
-#     print('conn:', conn)
-#     print('addr:', addr)
-#     print('sock:', sock)
-#     data = conn.recv(1024)
-#     print('data:', data)
-#     # if not data:
-#     #     break
-#     conn.send(data.upper())
-
-# conn.close()
 # TODO:
-#    Модифицируйте код сервера таким образом, чтобы он автоматически изменял номер порта, если он уже занят. Сервер должен выводить в консоль номер порта, который он слушает.
 #    Обработка ввода команд и общения сервер<->клиент
 
 class Serv:
@@ -82,26 +60,34 @@ class Client(Serv):
 
 class Server(Serv):
 
-    def __init__(self, host = 'localhost', port = 80, quantity = 5):
+    def __init__(self, host = 'localhost', port = 6463, quantity = 5):
         super().__init__()
-        self.sock = self.start()
         self.host = host
         self.port = port
         self.quantity = quantity
         self.connected = []
+        self.sock = self.start()
 
     def start(self):
         sock = socket.socket()
 
+        try:
+            sock.bind((self.host, self.port))
+        except Exception:
+            while True:
+                try:
+                    self.port += 1
+                    sock.bind((self.host, self.port))
+                    break
+                except Exception:
+                    pass
+
         self.add_log('Сервер запущен')
 
-        return sock
+        sock.listen(self.quantity)
+        self.add_log('Слушаем ' + str(self.host) + ' на ' + str(self.port) + ' порту')
 
-    def listen_port(self):
-        self.sock.bind((self.host, self.port))
-        self.sock.listen(self.quantity)
-        self.add_log('Слушаем '+str(self.host)+' на '+str(self.port)+' порту')
-        # print(self.sock)
+        return sock
 
     def wait_client(self):
         c, addr = self.sock.accept()
@@ -116,7 +102,7 @@ class Server(Serv):
 
 
 s = Server()
-s.listen_port()
+
 while True:
     client = s.wait_client()
     data = ''
