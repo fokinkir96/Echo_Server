@@ -3,6 +3,37 @@ import socket, os, datetime
 # TODO:
 #    Обработка ввода команд и общения сервер<->клиент
 
+
+class Auth:
+    def __init__(self, sock):
+        self.sock = sock
+
+    def get_login_data(self):
+        name = self.get_client_name()
+        self.greet_client()
+        if self.pwd == False:
+            self.set_password()
+            # Если нет пароля, то:
+            #   1. Просим пароль
+            #   2. Сохраняем хеш пароля
+            #   3. Отправляем токен со временем и сохраняем в файл ip:токен
+            #   4. Profit
+            pass
+        else:
+            pwd = self.get_client_password()
+            # Если есть токен, то:
+            #   1. чекаем валидность токена
+
+            # Если есть пароль, то:
+            #   1. Просим пароль
+            #   2. Проверяем хеши
+            #   3. Если ок, то profit(send token to client)
+            #   4. Если не ок, то просим еще раз(3 попытки)
+            #   5. Profit
+            pass
+
+
+
 class Serv:
 
     def __init__(self):
@@ -26,9 +57,17 @@ class Client(Serv):
         super().__init__()
         self.conn = conn if conn != '' else socket.socket()
         self.addr = addr
-        name = self.get_client_name(self.addr[0])
-        if name == False:
+
+        if 'serv' not in os.listdir():
+            os.mkdir('serv')
+
+        self.name = self.get_client_name(self.addr[0])
+        if self.name == False:
             self.send('Введите свое имя: ')
+            self.name = self.recv()
+            self.put_client_name(self.name)
+
+        self.send('Привет, ' + self.name)
             #
     def connect(self, host='localhost', port=9090):
         self.conn.connect((host, port))
@@ -48,11 +87,17 @@ class Client(Serv):
     def get_client_name(self, ip):
         with open('serv/clients.txt', 'r') as f:
             for i in f.readlines():
+                print(i)
                 i = i.split()
                 if ip == i[0]:
                     return i[1]
 
         return False
+
+    def put_client_name(self, name):
+        with open('serv/clients.txt', 'a+') as f:
+            f.write(str(self.addr[0])+' '+self.name+'\n')
+
     def disConnect(self):
         # self.send('exit')
         self.add_log('Клиент '+str(self.addr[0])+':'+str(self.addr[1])+' отключился')
@@ -60,7 +105,7 @@ class Client(Serv):
 
 class Server(Serv):
 
-    def __init__(self, host = 'localhost', port = 6463, quantity = 5):
+    def __init__(self, host = 'localhost', port = 9090, quantity = 5):
         super().__init__()
         self.host = host
         self.port = port
@@ -105,9 +150,11 @@ s = Server()
 
 while True:
     client = s.wait_client()
-    data = ''
+    data = False
     while data != 'exit':
         data = client.recv(1024)
+        if data == '':
+            break
         client.send(data)
     else:
         client.disConnect()
