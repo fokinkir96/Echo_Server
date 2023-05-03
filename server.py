@@ -1,4 +1,4 @@
-import socket, os, datetime
+import socket, os, datetime, json
 
 # TODO:
 #    Обработка ввода команд и общения сервер<->клиент
@@ -72,18 +72,42 @@ class Client(Serv):
     def connect(self, host='localhost', port=9090):
         self.conn.connect((host, port))
     def recv(self, bytes = 1024):
-        self.data = data = self.conn.recv(bytes).decode()
+        self.data = data = json.loads(self.conn.recv(bytes))
         self.add_log('Получили: '+self.data)
 
         return data
 
-    def send(self, d=''):
+    def send(self, d='', type='info'):
         data = d
         if d == '':
             data = self.data
-        self.conn.send(data.encode('UTF-8'))
+            return
+
+        head = self.get_header(len(data), type)
+        msg = self.get_message(head, data)
+        self.conn.send(msg)
         self.add_log('Отправили: '+data)
 
+    def get_message(self, head, body):
+        message = {
+            'Header' :  head,
+            'Body' :    body,
+        }
+
+        return json.dumps(message)
+    def get_header(self, length, type):
+        types = [
+            'info',
+            'prompt',
+        ]
+        if type in types:
+            mtype = type
+        header = {
+            'Content-length': length,
+            'Type': mtype,
+        }
+
+        return header
     def get_client_name(self, ip):
         with open('serv/clients.txt', 'r') as f:
             for i in f.readlines():
