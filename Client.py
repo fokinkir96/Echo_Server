@@ -1,15 +1,19 @@
-import Connected, socket, os, json
+import Connected, socket
+from modules.Logging import Logging
 class Client(Connected.Connected):
-    def __init__(self, conn='', addr=''):
+    def __init__(self):
         self.conn = socket.socket()
-        self.addr = addr
-        self.prefix = 'logs'
-        self.log_file_name = 'client.log'
-        self.log_file = self.prefix + '/' + self.log_file_name
+        self.log = Logging('client')
+        self.msgs = []
 
     def connect(self, host='localhost', port=9090):
-        self.conn.connect((host, port))
+        result = self.conn.connect_ex((host, port))
+        if result == 0:
+            self.log.add_log('Вы подключились к серверу '+str(host)+':'+str(port))
+        else:
+            self.log.add_log('Ошибка при подключении к серверу ' + str(host) + ':' + str(port))
+            self.log.add_log('Код ошибки: ' + str(result))
 
     def disConnect(self):
-        # self.send('exit')
-        self.add_log('Вы отключились от сервера')
+        self.send('exit')
+        self.log.add_log('Вы отключились от сервера')

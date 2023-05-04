@@ -1,5 +1,4 @@
-import socket, Logging, Connected
-
+from Server import Server
 # TODO:
 #    Обработка ввода команд и общения сервер<->клиент
 
@@ -32,48 +31,6 @@ import socket, Logging, Connected
 #             #   5. Profit
 #             pass
 
-class Server(Logging.Logging):
-
-    def __init__(self, host = 'localhost', port = 9090, quantity = 5):
-        super().__init__()
-        self.host = host
-        self.port = port
-        self.quantity = quantity
-        self.connected = []
-        self.sock = self.start()
-
-    def start(self):
-        sock = socket.socket()
-
-        try:
-            sock.bind((self.host, self.port))
-        except Exception:
-            while True:
-                try:
-                    self.port += 1
-                    sock.bind((self.host, self.port))
-                    break
-                except Exception:
-                    pass
-
-        self.add_log('Сервер запущен')
-
-        sock.listen(self.quantity)
-        self.add_log('Слушаем ' + str(self.host) + ' на ' + str(self.port) + ' порту')
-
-        return sock
-
-    def wait_client(self):
-        c, addr = self.sock.accept()
-        cl = Connected.Connected(c, addr)
-        self.connected.append(cl)
-
-        self.add_log('Клиент '+str(cl.addr[0])+':'+str(cl.addr[1])+' подключился')
-        return cl
-    def stop(self):
-        self.add_log('Сервер остановлен')
-        exit()
-
 
 s = Server()
 
@@ -82,8 +39,9 @@ while True:
     data = False
     while data != 'exit':
         data = client.recv(1024)
-        if data == '':
-            break
+        # if data == '':
+        #     break
         client.send(data)
     else:
         client.disConnect()
+        s.connected.remove(client)

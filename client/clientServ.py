@@ -1,31 +1,8 @@
 import Client
+from modules import Message
 
 # TODO:
 #   1. save token after login
-# class Client:
-#     def __init__(self, conn='', addr=''):
-#         self.conn = socket.socket()
-#         self.addr = addr
-#     def connect(self, host='localhost', port=9090):
-#         self.conn.connect((host, port))
-#     def recv(self, bytes = 1024):
-#         self.data = data = self.conn.recv(bytes).decode()
-#         # print('Получили: '+self.da   ta)
-#         print(data)
-#
-#         return data
-#
-#     def send(self, d=''):
-#         data = d
-#         if d == '':
-#             data = self.data
-#         self.conn.send(data.encode('UTF-8'))
-#         # print('Отправили: '+data)
-#
-#     def disConnect(self):
-#         self.send('exit')
-#         print('Вы отключились')
-
 
 sock = Client.Client()
 

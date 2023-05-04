@@ -1,14 +1,15 @@
 import os, datetime
 class Logging:
 
-    def __init__(self):
+    def __init__(self, filename='server'):
         self.prefix = 'logs'
-        self.log_file_name = 'server.log'
+        self.ext = '.log'
+        self.log_file_name = filename+self.ext
         self.log_file = self.prefix+'/'+self.log_file_name
 # Logging
     def create_log_file(self):
         if self.prefix not in os.listdir():
-            os.mkdir('logs')
+            os.mkdir('../logs')
         if self.log_file_name not in os.listdir(self.prefix):
             log = open(self.log_file, 'a', encoding='UTF-8')
             # print(log)
