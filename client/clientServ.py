@@ -1,5 +1,4 @@
 import Client
-from modules import Message
 
 # TODO:
 #   1. save token after login

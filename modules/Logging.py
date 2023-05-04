@@ -6,7 +6,6 @@ class Logging:
         self.ext = '.log'
         self.log_file_name = filename+self.ext
         self.log_file = self.prefix+'/'+self.log_file_name
-# Logging
     def create_log_file(self):
         if self.prefix not in os.listdir():
             os.mkdir('../logs')
@@ -15,7 +14,6 @@ class Logging:
             # print(log)
             log.close()
 
-        # return log
     def add_log(self, log):
         self.create_log_file()
         print(log)
