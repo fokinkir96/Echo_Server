@@ -13,9 +13,13 @@ port = int(port) if port != '' else 9090
 sock.connect(host, port)
 
 while True:
-    data = sock.recv(1024)
+    data, type = sock.recv(1024)
 
-    cmd = input('>:')
+    if type == 'info':
+        print(data)
+        cmd = input('>:')
+    elif type == 'prompt':
+        cmd = input(data+'>:')
     if cmd == 'exit':
         sock.disConnect()
         break

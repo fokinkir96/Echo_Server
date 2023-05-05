@@ -38,7 +38,7 @@ while True:
     client = s.wait_client()
     data = False
     while data != 'exit':
-        data = client.recv(1024)
+        data, type = client.recv(1024)
         # if data == '':
         #     break
         client.send(data)
