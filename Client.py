@@ -14,6 +14,10 @@ class Client(Connected.Connected):
             self.log.add_log('Ошибка при подключении к серверу ' + str(host) + ':' + str(port))
             self.log.add_log('Код ошибки: ' + str(result))
 
+    def save_cookie(self, data):
+        with open('sessions.txt', 'a+') as f:
+            f.write(data['sess_id']+' '+data['expires']+'\n')
+
     def disConnect(self):
         self.send('exit')
         self.log.add_log('Вы отключились от сервера')

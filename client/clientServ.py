@@ -20,6 +20,8 @@ while True:
         cmd = input('>:')
     elif type == 'prompt':
         cmd = input(data+'>:')
+    elif type == 'cookie':
+        sock.save_cookie(data)
     if cmd == 'exit':
         sock.disConnect()
         break
