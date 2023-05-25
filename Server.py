@@ -1,9 +1,9 @@
-import socket, Connected
+import socket
+from quests import Connected
 from modules.Logging import Logging
 class Server:
 
     def __init__(self, host = 'localhost', port = 9090, quantity = 5):
-        super().__init__()
         self.host = host
         self.port = port
         self.quantity = quantity

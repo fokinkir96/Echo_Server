@@ -22,7 +22,9 @@ while True:
         cmd = input(data+'>:')
     elif type == 'cookie':
         sock.save_cookie(data)
+        continue
     if cmd == 'exit':
         sock.disConnect()
         break
+
     sock.send(cmd)

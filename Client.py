@@ -1,4 +1,5 @@
-import Connected, socket
+import socket
+from quests import Connected
 from modules.Logging import Logging
 class Client(Connected.Connected):
     def __init__(self):

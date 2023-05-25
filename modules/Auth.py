@@ -43,6 +43,16 @@ class Auth:
 
         return False
 
+    def get_client_pwd(self, ip):
+        with open('serv/passwords.txt', 'r') as f:
+            for i in f.readlines():
+                print(i)
+                i = i.split()
+                if ip == i[0]:
+                    return i[1]
+
+        return False
+
     def save_client_name(self, ip, name):
         with open('serv/clients.txt', 'a+') as f:
             f.write(str(ip)+' '+name+'\n')
