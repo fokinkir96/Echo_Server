@@ -1,4 +1,4 @@
-import socket
+import socket, datetime
 from quests import Connected
 from modules.Logging import Logging
 class Client(Connected.Connected):
@@ -16,8 +16,22 @@ class Client(Connected.Connected):
             self.log.add_log('Код ошибки: ' + str(result))
 
     def save_cookie(self, data):
-        with open('sessions.txt', 'a+') as f:
+        with open('sessions.txt', 'w') as f:
             f.write(data['sess_id']+' '+data['expires']+'\n')
+
+    def send_auth_cookie(self):
+        with open('sessions.txt', 'r') as f:
+            line = f.read()
+            if len(line) == 0:
+                return False
+            cookie = line.split()
+            dt = cookie[1]+' '+cookie[2]
+            cookie = cookie[0]
+
+            if datetime.datetime.now() < datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M:%S'):
+                return False
+
+            self.send(cookie, 'auth_cookie')
 
     def disConnect(self):
         self.send('exit')

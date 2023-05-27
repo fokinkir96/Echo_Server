@@ -1,4 +1,5 @@
 import socket
+from quests import ConnectedAuthorization
 from quests import Connected
 from modules.Logging import Logging
 class Server:
@@ -37,7 +38,7 @@ class Server:
 
         self.log.add_log('Клиент '+str(addr[0])+':'+str(addr[1])+' подключился')
 
-        cl = Connected.Connected(c, addr)
+        cl = ConnectedAuthorization.ConnectedAuthorization(c, addr)
         self.connected.append(cl)
 
         return cl

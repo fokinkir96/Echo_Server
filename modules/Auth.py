@@ -71,7 +71,7 @@ class Auth:
         return hashlib.md5((ip+hex+str(salt)).encode('UTF-8')).hexdigest()
     def create_client_session(self, ip, hex):
         sess_id = self.get_sess_id(ip, hex)
-        expires = str(datetime.datetime.now()+datetime.timedelta(minutes=30))
+        expires = str(datetime.datetime.now()+datetime.timedelta(minutes=30))[:-7]
 
         with open('serv/sessions.txt', 'a+') as f:
             f.write(str(ip)+' '+sess_id+' '+expires+'\n')

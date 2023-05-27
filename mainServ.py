@@ -1,5 +1,5 @@
 from Server import Server
-from modules.Auth import Auth
+# import threading
 # TODO:
 #    Обработка ввода команд и общения сервер<->клиент
 
